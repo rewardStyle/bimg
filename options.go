@@ -41,12 +41,14 @@ const (
 	Bilinear
 	// Nohalo interpolation value.
 	Nohalo
+	BSplines
 )
 
 var interpolations = map[Interpolator]string{
 	Bicubic:  "bicubic",
 	Bilinear: "bilinear",
 	Nohalo:   "nohalo",
+	BSplines: "vsqbs",
 }
 
 func (i Interpolator) String() string {
