@@ -61,6 +61,7 @@ const (
 	Nohalo
 	// Nearest neighbour interpolation value.
 	Nearest
+	BSplines
 )
 
 var interpolations = map[Interpolator]string{
@@ -68,6 +69,7 @@ var interpolations = map[Interpolator]string{
 	Bilinear: "bilinear",
 	Nohalo:   "nohalo",
 	Nearest:  "nearest",
+	BSplines: "vsqbs",
 }
 
 func (i Interpolator) String() string {
