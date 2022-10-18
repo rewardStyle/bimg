@@ -74,6 +74,22 @@ func TestVipsSaveAvif(t *testing.T) {
 	}
 }
 
+func TestVipsSaveJp2k(t *testing.T) {
+	if !IsTypeSupportedSave(JP2K) {
+		t.Skipf("Format %#v is not supported", ImageTypes[JP2K])
+	}
+	image, _, _ := vipsRead(readImage("test.jpg"))
+	options := vipsSaveOptions{Quality: 95, Type: JP2K}
+	buf, err := vipsSave(image, options)
+	if err != nil {
+		t.Fatalf("Error saving image type %v: %v", ImageTypes[JP2K], err)
+	}
+
+	if len(buf) == 0 {
+		t.Fatalf("Empty saved '%v' image", ImageTypes[JP2K])
+	}
+}
+
 func TestVipsRotate(t *testing.T) {
 	files := []struct {
 		name   string

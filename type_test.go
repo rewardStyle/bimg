@@ -18,7 +18,7 @@ func TestDeterminateImageType(t *testing.T) {
 		{"test.gif", GIF},
 		{"test.pdf", PDF},
 		{"test.svg", SVG},
-		// {"test.jp2", MAGICK},
+		{"test.jp2", JP2K},
 		{"test.heic", HEIF},
 		{"test2.heic", HEIF},
 		{"test3.heic", HEIF},
@@ -50,7 +50,7 @@ func TestDeterminateImageTypeName(t *testing.T) {
 		{"test.gif", "gif"},
 		{"test.pdf", "pdf"},
 		{"test.svg", "svg"},
-		// {"test.jp2", "magick"},
+		{"test.jp2", "jp2k"},
 		{"test.heic", "heif"},
 		{"test.avif", "avif"},
 	}
@@ -60,6 +60,9 @@ func TestDeterminateImageTypeName(t *testing.T) {
 			continue
 		}
 		if file.expected == "avif" && VipsMajorVersion <= 8 && VipsMinorVersion < 9 {
+			continue
+		}
+		if file.expected == "jp2k" && VipsMajorVersion <= 8 && VipsMinorVersion < 11 {
 			continue
 		}
 
@@ -78,7 +81,7 @@ func TestIsTypeSupported(t *testing.T) {
 	types := []struct {
 		name ImageType
 	}{
-		{JPEG}, {PNG}, {WEBP}, {GIF}, {PDF}, {HEIF}, {AVIF},
+		{JPEG}, {PNG}, {WEBP}, {GIF}, {PDF}, {HEIF}, {AVIF}, {JP2K},
 	}
 
 	for _, n := range types {
@@ -86,6 +89,9 @@ func TestIsTypeSupported(t *testing.T) {
 			continue
 		}
 		if n.name == AVIF && VipsMajorVersion <= 8 && VipsMinorVersion < 9 {
+			continue
+		}
+		if n.name == JP2K && VipsMajorVersion <= 8 && VipsMinorVersion < 11 {
 			continue
 		}
 		if IsTypeSupported(n.name) == false {
@@ -106,6 +112,7 @@ func TestIsTypeNameSupported(t *testing.T) {
 		{"pdf", true},
 		{"heif", true},
 		{"avif", true},
+		{"jp2k", true},
 	}
 
 	for _, n := range types {
@@ -113,6 +120,9 @@ func TestIsTypeNameSupported(t *testing.T) {
 			continue
 		}
 		if n.name == "avif" && VipsMajorVersion <= 8 && VipsMinorVersion < 9 {
+			continue
+		}
+		if n.name == "jp2k" && VipsMajorVersion <= 8 && VipsMinorVersion < 11 {
 			continue
 		}
 		if IsTypeNameSupported(n.name) != n.expected {
@@ -139,6 +149,9 @@ func TestIsTypeSupportedSave(t *testing.T) {
 	if VipsVersion >= "8.12.0" {
 		types = append(types, struct{ name ImageType }{GIF})
 	}
+	if VipsVersion >= "8.11.0" {
+		types = append(types, struct{ name ImageType }{JP2K})
+	}
 
 	for _, n := range types {
 		if IsTypeSupportedSave(n.name) == false {
@@ -160,6 +173,7 @@ func TestIsTypeNameSupportedSave(t *testing.T) {
 		{"heif", VipsVersion >= "8.8.0"},
 		{"avif", VipsVersion >= "8.9.0"},
 		{"gif", VipsVersion >= "8.12.0"},
+		{"jp2k", VipsVersion >= "8.11.0"},
 	}
 
 	for _, n := range types {

@@ -205,6 +205,9 @@ func VipsIsTypeSupported(t ImageType) bool {
 	if t == AVIF {
 		return int(C.vips_type_find_bridge(C.HEIF)) != 0
 	}
+	if t == JP2K {
+		return int(C.vips_type_find_bridge(C.JP2K)) != 0
+	}
 	return false
 }
 
@@ -232,6 +235,9 @@ func VipsIsTypeSupportedSave(t ImageType) bool {
 	}
 	if t == GIF {
 		return int(C.vips_type_find_save_bridge(C.GIF)) != 0
+	}
+	if t == JP2K {
+		return int(C.vips_type_find_save_bridge(C.JP2K)) != 0
 	}
 	return false
 }
@@ -529,6 +535,8 @@ func vipsSave(image *C.VipsImage, o vipsSaveOptions) ([]byte, error) {
 		saveErr = C.vips_avifsave_bridge(tmpImage, &ptr, &length, strip, quality, lossless, speed)
 	case GIF:
 		saveErr = C.vips_gifsave_bridge(tmpImage, &ptr, &length, strip)
+	case JP2K:
+		saveErr = C.vips_jp2ksave_bridge(tmpImage, &ptr, &length, quality, lossless)
 	default:
 		saveErr = C.vips_jpegsave_bridge(tmpImage, &ptr, &length, strip, quality, interlace)
 	}
@@ -766,6 +774,13 @@ func vipsImageType(buf []byte) ImageType {
 	if IsTypeSupported(HEIF) && buf[4] == 0x66 && buf[5] == 0x74 && buf[6] == 0x79 && buf[7] == 0x70 &&
 		buf[8] == 0x61 && buf[9] == 0x76 && buf[10] == 0x69 && buf[11] == 0x66 {
 		return AVIF
+	}
+	// https://www.iana.org/assignments/media-types/image/jp2
+	// https://www.loc.gov/preservation/digital/formats/fdd/fdd_explanation.shtml#sign
+	if IsTypeSupported(JP2K) && buf[0] == 0x00 && buf[1] == 0x00 && buf[2] == 0x00 && buf[3] == 0x0c &&
+		buf[4] == 0x6a && buf[5] == 0x50 && buf[6] == 0x20 && buf[7] == 0x20 && buf[8] == 0x0d &&
+		buf[9] == 0x0a && buf[10] == 0x87 && buf[11] == 0x0a {
+		return JP2K
 	}
 
 	return UNKNOWN
