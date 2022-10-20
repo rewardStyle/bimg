@@ -1,9 +1,10 @@
-FROM golang:1.14
+FROM golang:1.16
 LABEL maintainer "tomas@aparicio.me"
 
 ARG LIBVIPS_VERSION=8.9.2
 ARG LIBHEIF_VERSION=1.9.1
 ARG GOLANGCILINT_VERSION=1.29.0
+ENV GO111MODULE=off
 
 # Installs libvips + required libraries
 RUN DEBIAN_FRONTEND=noninteractive \
@@ -14,7 +15,8 @@ RUN DEBIAN_FRONTEND=noninteractive \
   gobject-introspection gtk-doc-tools libglib2.0-dev libjpeg62-turbo-dev libpng-dev \
   libwebp-dev libtiff5-dev libgif-dev libexif-dev libxml2-dev libpoppler-glib-dev \
   swig libmagickwand-dev libpango1.0-dev libmatio-dev libopenslide-dev libcfitsio-dev \
-  libgsf-1-dev fftw3-dev liborc-0.4-dev librsvg2-dev libimagequant-dev libaom-dev && \
+  libgsf-1-dev fftw3-dev liborc-0.4-dev librsvg2-dev libimagequant-dev libaom-dev \
+  libopenjp2-7-dev && \
   cd /tmp && \
   curl -fsSLO https://github.com/strukturag/libheif/releases/download/v${LIBHEIF_VERSION}/libheif-${LIBHEIF_VERSION}.tar.gz && \
   tar zvxf libheif-${LIBHEIF_VERSION}.tar.gz && \
