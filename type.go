@@ -32,6 +32,8 @@ const (
 	HEIF
 	// AVIF represents the AVIF image type.
 	AVIF
+	// JXL represents the JPEG XL image type.
+	JXL
 	// JP2K represents the JP2K (JPEG-2000) image type.
 	JP2K
 )
@@ -53,6 +55,7 @@ var ImageTypes = map[ImageType]string{
 	MAGICK: "magick",
 	HEIF:   "heif",
 	AVIF:   "avif",
+	JXL:    "jxl",
 	JP2K:   "jp2k",
 }
 
