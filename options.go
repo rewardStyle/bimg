@@ -64,6 +64,31 @@ const (
 	BSplines
 )
 
+// resampling kernels
+type Kernel int
+
+const (
+	//The nearest pixel to the point.
+	NearestKernel Kernel = iota
+
+	//Convolve with a triangle filter.
+	LinearKernel
+
+	//Convolve with a cubic filter.
+	CubicKernel
+
+	//Convolve with a Mitchell kernel.
+	MitchellKernel
+
+	//Convolve with a two-lobe Lanczos kernel.
+	Lanczos2Kernel
+
+	//Convolve with a three-lobe Lanczos kernel.
+	Lanczos3Kernel
+
+	LastKernel
+)
+
 var interpolations = map[Interpolator]string{
 	Bicubic:  "bicubic",
 	Bilinear: "bilinear",
@@ -238,6 +263,7 @@ type Options struct {
 	WatermarkImage WatermarkImage
 	Type           ImageType
 	Interpolator   Interpolator
+	Kernel         Kernel
 	Interpretation Interpretation
 	GaussianBlur   GaussianBlur
 	Sharpen        Sharpen
